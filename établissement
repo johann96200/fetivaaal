@@ -1,0 +1,236 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\EtablissementRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: EtablissementRepository::class)]
+class Etablissement
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $nom = null;
+
+    #[ORM\Column(length: 272, nullable: true)]
+    private ?string $tel = null;
+
+    #[ORM\Column(length: 232, nullable: true)]
+    private ?string $mail = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $type = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $lieu = null;
+
+    #[ORM\OneToMany(mappedBy: 'etablissement', targetEntity: Lieu::class)]
+    private Collection $lieus;
+
+    #[ORM\OneToMany(mappedBy: 'etablissement', targetEntity: Offre::class)]
+    private Collection $offres;
+
+    #[ORM\OneToMany(mappedBy: 'etablissement', targetEntity: TypeCHambre::class)]
+    private Collection $typeCHambres;
+
+    #[ORM\OneToMany(mappedBy: 'etablissement', targetEntity: Attribution::class)]
+    private Collection $attributions;
+
+    public function __construct()
+    {
+        $this->lieus = new ArrayCollection();
+        $this->offres = new ArrayCollection();
+        $this->typeCHambres = new ArrayCollection();
+        $this->attributions = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(?string $nom): self
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getTel(): ?string
+    {
+        return $this->tel;
+    }
+
+    public function setTel(?string $tel): self
+    {
+        $this->tel = $tel;
+
+        return $this;
+    }
+
+    public function getMail(): ?string
+    {
+        return $this->mail;
+    }
+
+    public function setMail(?string $mail): self
+    {
+        $this->mail = $mail;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getLieu(): ?string
+    {
+        return $this->lieu;
+    }
+
+    public function setLieu(?string $lieu): self
+    {
+        $this->lieu = $lieu;
+
+        return $this;
+    }                   
+    /**
+     * @return Collection<int, Lieu>
+     */
+    public function getLieus(): Collection
+    {
+        return $this->lieus;
+    }
+
+    public function addLieu(Lieu $lieu): self
+    {
+        if (!$this->lieus->contains($lieu)) {
+            $this->lieus->add($lieu);
+            $lieu->setEtablissement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLieu(Lieu $lieu): self
+    {
+        if ($this->lieus->removeElement($lieu)) {
+            // set the owning side to null (unless already changed)
+            if ($lieu->getEtablissement() === $this) {
+                $lieu->setEtablissement(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Offre>
+     */
+    public function getOffres(): Collection
+    {
+        return $this->offres;
+    }
+
+    public function addOffre(Offre $offre): self
+    {
+        if (!$this->offres->contains($offre)) {
+            $this->offres->add($offre);
+            $offre->setEtablissement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOffre(Offre $offre): self
+    {
+        if ($this->offres->removeElement($offre)) {
+            // set the owning side to null (unless already changed)
+            if ($offre->getEtablissement() === $this) {
+                $offre->setEtablissement(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TypeCHambre>
+     */
+    public function getTypeCHambres(): Collection
+    {
+        return $this->typeCHambres;
+    }
+
+    public function addTypeCHambre(TypeCHambre $typeCHambre): self
+    {
+        if (!$this->typeCHambres->contains($typeCHambre)) {
+            $this->typeCHambres->add($typeCHambre);
+            $typeCHambre->setEtablissement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTypeCHambre(TypeCHambre $typeCHambre): self
+    {
+        if ($this->typeCHambres->removeElement($typeCHambre)) {
+            // set the owning side to null (unless already changed)
+            if ($typeCHambre->getEtablissement() === $this) {
+                $typeCHambre->setEtablissement(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Attribution>
+     */
+    public function getAttributions(): Collection
+    {
+        return $this->attributions;
+    }
+
+    public function addAttribution(Attribution $attribution): self
+    {
+        if (!$this->attributions->contains($attribution)) {
+            $this->attributions->add($attribution);
+            $attribution->setEtablissement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAttribution(Attribution $attribution): self
+    {
+        if ($this->attributions->removeElement($attribution)) {
+            // set the owning side to null (unless already changed)
+            if ($attribution->getEtablissement() === $this) {
+                $attribution->setEtablissement(null);
+            }
+        }
+
+        return $this;
+    }
+}
